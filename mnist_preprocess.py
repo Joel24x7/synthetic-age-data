@@ -44,6 +44,3 @@ def load_mnist_color(change_colors=True):
         
         dataset[i] = image
     return dataset
-
-    plt.imshow()
-    plt.show()

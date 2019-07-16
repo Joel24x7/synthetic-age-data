@@ -1,5 +1,5 @@
 import tensorflow as tf
-from wrapped_utils import *
+from utils import *
 from hyperparameters import *
 
 def decoder(embedding, scope_name, reuse=False):

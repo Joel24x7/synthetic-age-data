@@ -11,7 +11,7 @@ def conv_layer(input_layer, layer_depth, kernel_size=(3,3), stride=(1,1), stddev
             [kernel_size[0], 
             kernel_size[1], filter_depth, layer_depth], 
             initializer=tf.truncated_normal_initializer(stddev=stddev))
-        bias = tf.get_variabe('bias', 
+        bias = tf.get_variable('bias', 
             shape=layer_depth, 
             initializer=tf.constant_initializer(0))
         conv = tf.nn.conv2d(input_layer, 
@@ -34,7 +34,7 @@ def dense_layer(input_layer, units, scope='dense', in_dim = None, stddev=0.2, bi
     
     with tf.variable_scope(scope):
         num_input_entries = in_dim or shape[1]
-        weight_matrix = tf.vet_variable('weight_matrix', 
+        weight_matrix = tf.get_variable('weight_matrix', 
             [num_input_entries, units],
             dtype=tf.float32, 
             initializer=tf.random_normal_initializer(stddev=stddev))
@@ -60,9 +60,6 @@ def convergence(real_images_loss, fake_images_loss, gamma_diversity_ratio):
 
 def discriminator_loss(real_images_loss, fake_images_loss, kt_equilbrium_term):
     return real_images_loss - kt_equilbrium_term * fake_images_loss
-
-def generator_loss(fake_images_loss): 
-    return fake_images_loss
 
 def kt_step(kt_equilbrium_term, lambda_kt_learning_rate, gamma_diversity_ratio, real_images_loss, fake_images_loss):
     kt = np.minimum(1., kt_equilbrium_term + lambda_kt_learning_rate * (gamma_diversity_ratio * real_images_loss - fake_images_loss))

@@ -89,11 +89,11 @@ def build_generator(embedding, scope_name='generator', reuse=False):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
-        return decoder(embedding, num_filters, hidden_size, image_size, scope_name)
+        return decoder(embedding, scope_name, reuse)
 
 def build_discriminator(images, scope_name='discriminator', reuse=False):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
-        enc = encoder(images, num_filters, hidden_size, image_size, scope_name, reuse)
-        return decoder(enc, num_filters, hidden_size, image_size, scope_name, reuse)
+        enc = encoder(images, scope_name, reuse)
+        return decoder(enc, scope_name, reuse)

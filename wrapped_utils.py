@@ -8,15 +8,14 @@ def conv_layer(input_layer, layer_depth, kernel_size=(3,3), stride=(1,1), stddev
     with tf.variable_scope(scope):
         filter_depth = in_dim or input_layer.shape[-1]
         weights = tf.get_variable('weights', 
-            [kernel_size[0], 
-            kernel_size[1], filter_depth, layer_depth], 
+            [kernel_size[0], kernel_size[1], filter_depth, layer_depth], 
             initializer=tf.truncated_normal_initializer(stddev=stddev))
         bias = tf.get_variable('bias', 
             shape=layer_depth, 
             initializer=tf.constant_initializer(0))
         conv = tf.nn.conv2d(input_layer, 
             weights, 
-            strides=[1,stride[0],stride[1],1], 
+            strides=[1,stride[0], stride[1], 1], 
             padding=padding)
         conv = tf.nn.bias_add(conv, bias)
         return conv

@@ -1,12 +1,12 @@
 import tensorflow as tf
 from wrapped_utils import *
+from hyperparameters import *
 
-def encoder(images, num_filters, hidden_size, image_size, scope_name, reuse=False):
+def encoder(images, scope_name, reuse=False):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
 
-        original_num_filters = num_filters
         organized_images = tf.reshape(images, [-1, image_size, image_size, 3])
         
         conv0 = conv_layer(input_layer=organized_images, layer_depth=num_filters, scope='enc0')
@@ -16,38 +16,34 @@ def encoder(images, num_filters, hidden_size, image_size, scope_name, reuse=Fals
         conv2 = conv_layer(input_layer=conv1, layer_depth=num_filters, scope='enc2')
         conv2 = tf.nn.elu(conv2)
 
-        num_filters = original_num_filters*2
-        sub1 = subsample(conv=conv2, num_filters=num_filters, scope='enc_sub1')
-        conv3 = conv_layer(input_layer=sub1, layer_depth=num_filters, scope='enc3')
+        sub1 = subsample(conv=conv2, num_filters=num_filters*2, scope='enc_sub1')
+        conv3 = conv_layer(input_layer=sub1, layer_depth=num_filters*2, scope='enc3')
         conv3 = tf.nn.relu(conv3)
-        conv4 = conv_layer(input_layer=conv3, layer_depth=num_filters, scope='enc4')
+        conv4 = conv_layer(input_layer=conv3, layer_depth=num_filters*2, scope='enc4')
         conv4 = tf.nn.elu(conv4)
 
-        num_filters = original_num_filters*3
-        sub2 = subsample(conv=conv4, num_filters=num_filters, scope='enc_sub2')
-        conv5 = conv_layer(input_layer=sub2, layer_depth=num_filters, scope='enc5')
+        sub2 = subsample(conv=conv4, num_filters=num_filters*3, scope='enc_sub2')
+        conv5 = conv_layer(input_layer=sub2, layer_depth=num_filters*3, scope='enc5')
         tf.nn.elu(conv5)
-        conv6 = conv_layer(input_layer=conv5, layer_depth=num_filters, scope='enc6')
+        conv6 = conv_layer(input_layer=conv5, layer_depth=num_filters*3, scope='enc6')
         tf.nn.elu(conv6)
 
-        num_filters = original_num_filters*4
-        sub3 = subsample(conv=conv6, num_filters=num_filters, scope='enc_sub3')
-        conv7 = conv_layer(input_layer=sub3, layer_depth=num_filters, scope='enc7')
+        sub3 = subsample(conv=conv6, num_filters=num_filters*4, scope='enc_sub3')
+        conv7 = conv_layer(input_layer=sub3, layer_depth=num_filters*4, scope='enc7')
         tf.nn.elu(conv6)
-        conv8 = conv_layer(input_layer=conv7, layer_depth=num_filters, scope='enc8')
+        conv8 = conv_layer(input_layer=conv7, layer_depth=num_filters*4, scope='enc8')
         tf.nn.elu(conv8)
 
-        num_filters = original_num_filters*5
-        sub4 = subsample(conv=conv8, num_filters=num_filters, scope='enc_sub4')
-        conv9 = conv_layer(input_layer=sub4, layer_depth=num_filters, scope='9')
+        sub4 = subsample(conv=conv8, num_filters=num_filters*5, scope='enc_sub4')
+        conv9 = conv_layer(input_layer=sub4, layer_depth=num_filters*5, scope='9')
         tf.nn.elu(conv9)
-        conv10 = conv_layer(input_layer=conv9, layer_depth=num_filters, scope='enc10')
+        conv10 = conv_layer(input_layer=conv9, layer_depth=num_filters*5, scope='enc10')
         tf.nn.elu(conv10)
 
         encoder_output = dense_layer(input_layer=conv10, units=hidden_size, scope='encoder_output')
         return encoder_output
 
-def decoder(embedding, num_filters, hidden_size, image_size, scope_name, reuse=False):
+def decoder(embedding, scope_name, reuse=False):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
@@ -89,13 +85,13 @@ def decoder(embedding, num_filters, hidden_size, image_size, scope_name, reuse=F
         #decoder_output = tf.reshape(decoder_output, [-1, image_size * image_size * 3])
         return decoder_output
 
-def build_generator(embedding, num_filters, hidden_size, image_size=128, scope_name='generator', reuse=False):
+def build_generator(embedding, scope_name='generator', reuse=False):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
         return decoder(embedding, num_filters, hidden_size, image_size, scope_name)
 
-def build_discriminator(images, num_filters, hidden_size, image_size=128, scope_name='discriminator', reuse=False):
+def build_discriminator(images, scope_name='discriminator', reuse=False):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()

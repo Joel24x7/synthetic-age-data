@@ -163,7 +163,7 @@ class Began():
         z_test = np.random.uniform(-1,1,size=[batch_size, noise_dimension])
         output_gen = (self.sess.run(self.g_z, feed_dict={self.z : z_test}))
 
-        for i in num_images:
+        for i in range(num_images):
             tmpName = 'results/test_image{}.png'.format(i)
             img = output_gen[i]
             plt.savefig(img, tmpName)

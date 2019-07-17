@@ -1,0 +1,2 @@
+model_checkpoint_path: "mnist_model.model-2439"
+all_model_checkpoint_paths: "mnist_model.model-2439"

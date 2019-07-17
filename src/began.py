@@ -1,25 +1,32 @@
-import tensorflow as tf
-import numpy as np
 import os
 import time
+
 import matplotlib.pyplot as plt
+import numpy as np
+import tensorflow as tf
+
+from datasets.mnist_preprocess import load_data
 from src.config import *
 from src.models import *
 from src.utils import *
-import src.mnist_preprocess
+
 
 class Began():
     def __init__(self, sess):
 
+        print("\nInitializing BEGAN Model Object\n")
         self.sess = sess
 
         if not os.path.exists('assets'):
             os.makedirs('assets')
         make_file_structure(project_dir)
+        print("\nMade file structures\n")
 
+        print("\nCompiling models...\n")
         self.compile_model()
 
     def load(self, sess, saver):
+        print("\nLoading checkpoints...\n")
         checkpoint = tf.train.get_checkpoint_state(checkpoint_dir)
         checkpoint_name = os.path.basename(checkpoint.model_checkpoint_path)
         saver.restore(sess, os.path.join(checkpoint_dir, checkpoint_name))
@@ -79,9 +86,6 @@ class Began():
             self.load(self.sess, self.saver)
         except:
             self.saver.save(self.sess, model_name, write_meta_graph=True)
-            '''
-            Implement Saver!
-            '''
 
         '''
         Summary
@@ -95,9 +99,13 @@ class Began():
         self.merged = tf.summary.merge_all()
         self.writer = tf.summary.FileWriter(project_dir, self.sess.graph)
 
+        print("\nCompilation successful\n")
+
     def train(self):
 
-        data = src.mnist_preprocess.load_mnist_color()
+        print("\nBeginning training...\n")
+        data = load_data()
+        np.random.shuffle(data)
         start_time = time.time()
         kt = kt_config
         lr = learning_rate

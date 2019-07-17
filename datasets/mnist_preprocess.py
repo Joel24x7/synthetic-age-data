@@ -1,20 +1,30 @@
-import tensorflow as tf
+import os
+
+import h5py
+import matplotlib.pyplot as plt
 import numpy as np
 import PIL.Image as PILImage
 import scipy
-import matplotlib.pyplot as plt
-from src.config import *
-import os
+import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
+image_size=64
 
-def load_mnist_color(change_colors=True):
+def load_data():
+    with h5py.File('datasets/mnist_data.h5') as file:
+        data = file['mnist_data']
+        data = np.array(data, dtype=np.float16)
+        return data
+
+def prep_mnist_color(change_colors=True):
+
+    print("\nPreparing Mnist digits...\n")
 
     scale_factor=image_size/28.0
     x_train = input_data.read_data_sets("mnist", one_hot=True).train.images
     x_train = x_train.reshape(-1, 28, 28, 1).astype(np.float32)
     
-    path = os.path.abspath('src/color_img.png')
+    path = os.path.abspath('color_img.png') 
     color_img = PILImage.open(path)
 
     # Resize (this is optional but results in a training set of larger images)
@@ -46,4 +56,10 @@ def load_mnist_color(change_colors=True):
         image[binary[i]] = 1 - image[binary[i]]
         
         dataset[i] = image
+    print("\nPreprocessing successful\n")
     return dataset
+
+if __name__ == "__main__":
+    data = prep_mnist_color()
+    with h5py.File('mnist_data.h5', 'w') as file:
+        file.create_dataset('mnist_data', data=data)

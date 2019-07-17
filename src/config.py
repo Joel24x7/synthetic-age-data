@@ -2,16 +2,16 @@
 num_filters=64
 image_size=64
 hidden_size=64
-noise_dimension=64 #paper
+noise_dimension=64 
 
 #Training
-epochs=100
+epochs=1
 kt_config=0.
 diversity_ratio=0.5
-lambda_kt=0.001 #paper
+lambda_kt=0.001 
 learning_rate=0.0001
 step_decay_rate=2
-batch_size=16 #paper
+batch_size=16
 
 #Saver
 project_dir='assets/mnist_model/'

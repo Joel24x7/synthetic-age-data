@@ -1,0 +1,14 @@
+tensorflow
+tensorflow-gpu
+numpy
+tqdm
+h5py
+os
+time
+datetime
+matplotlib.pyplot
+PIL.Image
+scipy.misc
+tensorflow.examples.tutorials.mnist
+
+*First python mnist_preprocess.py

@@ -151,7 +151,7 @@ class Began():
                     # update learning rate
                     lr *= 0.95
                     # save & test
-                    self.saver.save(self.sess, self.ckpt_model_name, global_step=self.count, write_meta_graph=False)
+                    self.saver.save(self.sess, model_name, global_step=self.count, write_meta_graph=False)
                     self.test(True)
 
     

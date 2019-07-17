@@ -97,7 +97,7 @@ class Began():
 
     def train(self):
 
-        data = mnist_preprocess.load_mnist_color()
+        data = src.mnist_preprocess.load_mnist_color()
         start_time = time.time()
         kt = kt_config
         lr = learning_rate
@@ -106,15 +106,15 @@ class Began():
         num_batches_per_epoch = len(data) // batch_size
         self.count = 0
 
-        for epoch in epochs:
+        for epoch in range(epochs):
 
-            for batch_step in num_batches_per_epoch:
+            for batch_step in range(num_batches_per_epoch):
                 self.count += 1
                 
                 #Prep training (x) and noise (z) batches
                 start_data_batch = batch_size * batch_size
                 end_data_batch = start_data_batch + batch_size
-                batch_data = data[start_data_batch:encoder, :, :, :]
+                batch_data = data[start_data_batch:end_data_batch, :, :, :]
                 z_batch = np.random.uniform(-1,1,size=[batch_size, noise_dimension])
 
                 #Prep tf fetches and feed dictionary
@@ -128,9 +128,9 @@ class Began():
 
                 #Update dynamic variables (kt and convergence)
                 kt = np.maximum(np.minimum(1., kt + lambda_kt * (diversity_ratio * d_x_loss_output - d_z_loss_output)), 0.)
-                convergence = d_x_loss_output + tf.abs(diversity_ratio * d_x_loss_output - d_z_loss_output)
+                convergence = d_x_loss_output + np.abs(diversity_ratio * d_x_loss_output - d_z_loss_output)
                 loss = gen_loss_output + dis_loss_output
-
+               
                 print("Epoch: [%2d] [%4d/%4d] time: %4.4f, "
                       "loss: %.4f, loss_g: %.4f, loss_d: %.4f, d_real: %.4f, d_fake: %.4f, kt: %.8f, M: %.8f"
                       % (epoch, batch_step, num_batches_per_epoch, time.time() - start_time,

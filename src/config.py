@@ -6,7 +6,7 @@ noise_dimension=64 #paper
 
 #Training
 epochs=100
-kt_config=0.0
+kt_config=0.
 diversity_ratio=0.5
 lambda_kt=0.001 #paper
 learning_rate=0.0001

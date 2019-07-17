@@ -12,3 +12,8 @@ follow this https://github.com/williamFalcon/tensorflow-gpu-install-ubuntu-16.04
 4. Make python environment ( conda create --name ml_envt python=3.5 )
 5. Install requirements ( pip install --user --requirement requirements.txt )
     Also add tensorflow-gpu - but first try running b4
+
+
+Running:
+1. preprocess 
+2. then run

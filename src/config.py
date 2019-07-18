@@ -5,7 +5,7 @@ hidden_size=64
 noise_dimension=64 
 
 #Training
-epochs=1
+epochs=100
 kt_config=0.
 diversity_ratio=0.5
 lambda_kt=0.001 

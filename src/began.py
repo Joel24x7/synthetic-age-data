@@ -164,6 +164,7 @@ class Began():
         output_gen = (self.sess.run(self.g_z, feed_dict={self.z : z_test}))
 
         for i in range(num_images):
-            tmpName = 'results/test_image{}.png'.format(i)
+            tmpName = 'assets/mnist_model/results/test_image{}.png'.format(i)
             img = output_gen[i]
-            plt.savefig(img, tmpName)
+            plt.imshow(img)
+            plt.savefig(tmpName)

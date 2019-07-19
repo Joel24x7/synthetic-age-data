@@ -14,15 +14,12 @@ from src.utils import *
 class Began():
     def __init__(self, sess):
 
-        print("\nInitializing BEGAN Model Object\n")
         self.sess = sess
 
         if not os.path.exists('assets'):
             os.makedirs('assets')
         make_file_structure(project_dir)
-        print("\nMade file structures\n")
 
-        print("\nCompiling models...\n")
         self.compile_model()
 
     def load(self, sess, saver):
@@ -54,7 +51,7 @@ class Began():
 
         Ld = L(x) - kt * L(G(z))
         Lg = L(G(z))
-        kt+1 = kt + lamda_kt * (gamma * L(x) - L(G(z)))
+        *kt+1 = kt + lamda_kt * (gamma * L(x) - L(G(z)))*
         m_global = L(x) + |gamma * L(x) - L(G(z))|
         '''
         self.d_x_loss = l1_loss(self.x, self.d_x)
@@ -99,8 +96,6 @@ class Began():
         self.merged = tf.summary.merge_all()
         self.writer = tf.summary.FileWriter(project_dir, self.sess.graph)
 
-        print("\nCompilation successful\n")
-
     def train(self):
 
         print("\nBeginning training...\n")
@@ -120,7 +115,7 @@ class Began():
                 self.count += 1
                 
                 #Prep training (x) and noise (z) batches
-                start_data_batch = batch_size * batch_size
+                start_data_batch = batch_step * batch_size
                 end_data_batch = start_data_batch + batch_size
                 batch_data = data[start_data_batch:end_data_batch, :, :, :]
                 z_batch = np.random.uniform(-1,1,size=[batch_size, noise_dimension])
@@ -152,10 +147,10 @@ class Began():
                     lr *= 0.95
                     # save & test
                     self.saver.save(self.sess, model_name, global_step=self.count, write_meta_graph=False)
-                    self.test(True)
+                    self.test('train')
 
     
-    def test(self, train_flag=True):
+    def test(self, key='test'):
 
         #Generate output
         num_images = batch_size
@@ -164,7 +159,7 @@ class Began():
         output_gen = (self.sess.run(self.g_z, feed_dict={self.z : z_test}))
 
         for i in range(num_images):
-            tmpName = 'assets/mnist_model/results/test_image{}.png'.format(i)
+            tmpName = 'assets/mnist_model/results/{}_image{}.png'.format(key, i)
             img = output_gen[i]
             plt.imshow(img)
             plt.savefig(tmpName)

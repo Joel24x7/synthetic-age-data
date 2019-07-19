@@ -38,7 +38,6 @@ def prep_mnist_color(change_colors=True):
     
     # Create a new placeholder variable for our data
     dataset = np.zeros((x_train.shape[0], image_size, image_size, 3))
-    
     for i in range(x_train.shape[0]):
         # Take a random crop of the color_img image (background)
         x_c = np.random.randint(0, color_img.size[0] - image_size)

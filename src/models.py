@@ -84,18 +84,14 @@ def encoder(images, scope_name, reuse=False):
         return encoder_output
 
 def forward_pass_generator(embedding, scope_name='generator', reuse=False):
-    print("\nRunning forward pass through generator...\n")
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
-        print("\nGeneration successful\n")
         return decoder(embedding, scope_name, reuse)
 
 def forward_pass_discriminator(images, scope_name='discriminator', reuse=False):
-    print("\nRunning forward pass through discriminator...\n")
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
         enc = encoder(images, scope_name, reuse)
-        print("\nDiscrimination successful\n")
         return decoder(enc, scope_name, reuse)

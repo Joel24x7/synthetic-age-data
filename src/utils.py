@@ -11,15 +11,15 @@ def conv_layer(input_layer, layer_depth, kernel_size=(3,3), stride=(1,1), stddev
             initializer=tf.truncated_normal_initializer(stddev=stddev))
         bias = tf.get_variable('bias', 
             shape=layer_depth, 
-            initializer=tf.constant_initializer(0))
+            initializer=tf.constant_initializer(0.))
         conv = tf.nn.conv2d(input_layer, 
             weights, 
             strides=[1,stride[0], stride[1], 1], 
             padding=padding)
         conv = tf.nn.bias_add(conv, bias)
         return conv
-def dense_layer(input_layer, units, scope='dense', in_dim = None, stddev=0.2, bias_start=0.0):
 
+def dense_layer(input_layer, units, scope='dense', in_dim = None, stddev=0.2, bias_start=0.0):
     shape = input_layer.shape
     if len(shape) > 2:
         input_layer = tf.reshape(input_layer, [-1, int(np.prod(shape[1:]))])
@@ -43,11 +43,17 @@ def subsample(conv, num_filters, scope):
     conv_tmp = conv_layer(conv, num_filters, kernel_size=(2,2), stride=(2,2), scope=scope)
     return tf.nn.elu(conv_tmp)
 
+# def subsample_pool(conv, num_filters, scope):
+#     conv_tmp = conv_layer(conv, 2 * num_filters, kernel_size=(1,1), stride=(1,1), scope=scope)
+#     pooled = tf.nn.avg_pool(conv_tmp, ksize=[1, 2, 2, 1], strides = [1, 2, 2, 1], padding='SAME')
+#     return pooled
+
 #L1 Pixel-wise Loss for distributions
 def l1_loss(original_images, reconstructed_images):
     return tf.reduce_mean(tf.abs(original_images-reconstructed_images))
 
 def make_file_structure(project_dir):
+    print("\nMade file structures\n")
     if not os.path.exists(project_dir):
         os.makedirs(project_dir)
         os.makedirs(os.path.join(project_dir, 'checkpoints'))

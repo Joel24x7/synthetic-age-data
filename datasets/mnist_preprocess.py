@@ -43,8 +43,9 @@ def prep_mnist_color(change_colors=True):
         x_c = np.random.randint(0, color_img.size[0] - image_size)
         y_c = np.random.randint(0, color_img.size[1] - image_size)
         image = color_img.crop((x_c, y_c, x_c + image_size, y_c + image_size))
-        # Conver the image to float between 0 and 1
-        image = np.asarray(image) / 255.0
+        # Conver the image to float between -1 and 1
+        image = np.asarray(image) / (255*0.5)
+        image -= 1.0
 
         if change_colors:
             # Change color distribution

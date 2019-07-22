@@ -1,0 +1,6 @@
+model_checkpoint_path: "mnist_model.model-2005679"
+all_model_checkpoint_paths: "mnist_model.model-1995919"
+all_model_checkpoint_paths: "mnist_model.model-1998359"
+all_model_checkpoint_paths: "mnist_model.model-2000799"
+all_model_checkpoint_paths: "mnist_model.model-2003239"
+all_model_checkpoint_paths: "mnist_model.model-2005679"

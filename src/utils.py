@@ -39,14 +39,12 @@ def upsample(conv, size):
     return tf.image.resize_nearest_neighbor(conv, size)
 
 #Downsample with Strided Convolution
-def subsample(conv, num_filters, scope):
-    conv_tmp = conv_layer(conv, num_filters, kernel_size=(2,2), stride=(2,2), scope=scope)
-    return tf.nn.elu(conv_tmp)
+# def subsample(conv, num_filters, scope):
+#     conv_tmp = conv_layer(conv, num_filters, kernel_size=(2,2), stride=(2,2), scope=scope)
+#     return tf.nn.elu(conv_tmp)
 
-# def subsample_pool(conv, num_filters, scope):
-#     conv_tmp = conv_layer(conv, 2 * num_filters, kernel_size=(1,1), stride=(1,1), scope=scope)
-#     pooled = tf.nn.avg_pool(conv_tmp, ksize=[1, 2, 2, 1], strides = [1, 2, 2, 1], padding='SAME')
-#     return pooled
+def subsample(conv):
+    return tf.nn.max_pool(conv, ksize=(1,2,2,1), strides=(1,2,2,1), padding='SAME')
 
 #L1 Pixel-wise Loss for distributions
 def l1_loss(original_images, reconstructed_images):

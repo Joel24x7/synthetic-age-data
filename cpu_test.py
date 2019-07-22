@@ -3,4 +3,4 @@ import src.began
 
 with tf.Session() as sess:
     model = src.began.Began(sess)
-    model.test()
+    model.train()

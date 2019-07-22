@@ -41,7 +41,8 @@ def decoder(embedding, scope_name, reuse=False):
         conv8 = tf.nn.elu(conv8)
         assert conv8.shape == (batch_size, 64, 64, num_filters)
 
-        decoder_output = conv_layer(input_layer=conv8, layer_depth=3, scope='decoder_image')
+        conv9 = conv_layer(input_layer=conv8, layer_depth=3, scope='decoder_image')
+        decoder_output = tf.nn.tanh(conv9)
         return decoder_output
 
 def encoder(images, scope_name, reuse=False):
@@ -59,28 +60,29 @@ def encoder(images, scope_name, reuse=False):
         conv2 = tf.nn.elu(conv2)
         assert conv2.shape == (batch_size, 64, 64, num_filters)
 
-        sub1 = subsample(conv=conv2, num_filters=num_filters*2, scope='enc_sub1')
+        sub1 = subsample(conv=conv2)
         conv3 = conv_layer(input_layer=sub1, layer_depth=num_filters*2, scope='enc3')
         conv3 = tf.nn.relu(conv3)
         conv4 = conv_layer(input_layer=conv3, layer_depth=num_filters*2, scope='enc4')
         conv4 = tf.nn.elu(conv4)
         assert conv4.shape == (batch_size, 32, 32, num_filters*2)
 
-        sub2 = subsample(conv=conv4, num_filters=num_filters*3, scope='enc_sub2')
+        sub2 = subsample(conv=conv4)
         conv5 = conv_layer(input_layer=sub2, layer_depth=num_filters*3, scope='enc5')
         tf.nn.elu(conv5)
         conv6 = conv_layer(input_layer=conv5, layer_depth=num_filters*3, scope='enc6')
         tf.nn.elu(conv6)
         assert conv6.shape == (batch_size, 16, 16, num_filters * 3)
 
-        sub3 = subsample(conv=conv6, num_filters=num_filters*4, scope='enc_sub3')
+        sub3 = subsample(conv=conv6)
         conv7 = conv_layer(input_layer=sub3, layer_depth=num_filters*4, scope='enc7')
         tf.nn.elu(conv6)
         conv8 = conv_layer(input_layer=conv7, layer_depth=num_filters*4, scope='enc8')
         tf.nn.elu(conv8)
         assert conv8.shape == (batch_size, 8, 8, num_filters * 4)
 
-        encoder_output = dense_layer(input_layer=conv8, units=hidden_size, scope='encoder_output')
+        dense9 = dense_layer(input_layer=conv8, units=hidden_size, scope='encoder_output')
+        encoder_output = tf.nn.tanh(dense9)
         return encoder_output
 
 def forward_pass_generator(embedding, scope_name='generator', reuse=False):
@@ -93,5 +95,5 @@ def forward_pass_discriminator(images, scope_name='discriminator', reuse=False):
     with tf.variable_scope(scope_name) as scope:
         if reuse:
             scope.reuse_variables()
-        enc = encoder(images, scope_name, reuse)
-        return decoder(enc, scope_name, reuse)
+        x = encoder(images, scope_name, reuse)
+        return decoder(x, scope_name, reuse)
